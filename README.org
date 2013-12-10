@@ -1,0 +1,28 @@
+* About
+  =remote-debug= is a minor utility library to enable remote
+  debugging of Common Lisp programs over Swank.
+
+* Usage
+  The library provides two forms, =(call-with-remote-debug func &rest
+  args)= and =(with-remote-debug (&optional port) &body body)=. The
+  latter macro simply sets up a binding for =*swank-port*=, wraps
+  =body= in a =lambda= and passes it to =call-with-remote-debug=.
+
+  If code wrapped by one of these forms enters the debugger, a Swank
+  server is started on =*swank-port*= (without first handling the
+  condition), and the condition is stored in the variable
+  =*current-condition*=. You can then connect to the swank server and
+  run =invoke-debug= (not to be confused with =cl:invoke-debugger=) to
+  run any pre-existing =*debugger-hook*= hooks and invoke the
+  debugger. When the condition has been handled, the swank server
+  exits.
+
+  If you disconnect from the Swank server without handling the
+  condition, the server will be restarted.
+
+* Notes
+  - Any existing =*debugger-hook*= won't be run until =invoke-debug=
+    is run, so it may be run quite a while after the actual error, or
+    possibly not at all.
+  - The Swank server does not offer any form of authentication or
+    encryption, but only listens on the loopback address (127.0.0.1).
