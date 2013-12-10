@@ -26,3 +26,6 @@
     possibly not at all.
   - The Swank server does not offer any form of authentication or
     encryption, but only listens on the loopback address (127.0.0.1).
+  - The Swank server is run with the single-threaded communication
+    style to block until the condition has been handled, so you won't
+    be able to run multiple tasks on that server.
